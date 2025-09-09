@@ -61,7 +61,6 @@ public class DataInitializer implements CommandLineRunner {
                 .role(Role.ADMIN)
                 .phoneNumber(adminPhone)
                 .isEmailVerified(true)
-                .isPhoneVerified(true)
                 .address(adminAddress)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

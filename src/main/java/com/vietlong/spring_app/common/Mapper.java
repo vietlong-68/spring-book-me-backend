@@ -15,7 +15,6 @@ public class Mapper {
         userResponse.setDateOfBirth(user.getDateOfBirth());
         userResponse.setGender(user.getGender());
         userResponse.setIsEmailVerified(user.getIsEmailVerified());
-        userResponse.setIsPhoneVerified(user.getIsPhoneVerified());
         userResponse.setAddress(user.getAddress());
         userResponse.setCreatedAt(user.getCreatedAt());
         userResponse.setUpdatedAt(user.getUpdatedAt());

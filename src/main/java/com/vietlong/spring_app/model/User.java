@@ -59,10 +59,6 @@ public class User {
     @Column(name = "is_email_verified", nullable = false)
     private Boolean isEmailVerified = false;
 
-    @Builder.Default
-    @Column(name = "is_phone_verified", nullable = false)
-    private Boolean isPhoneVerified = false;
-
     @Size(max = 500, message = "Địa chỉ không được vượt quá 500 ký tự")
     @Column(name = "address", length = 500)
     private String address;

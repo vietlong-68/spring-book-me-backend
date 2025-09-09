@@ -91,7 +91,6 @@ public class AuthService {
         user.setDateOfBirth(registerRequest.getDateOfBirth());
         user.setGender(registerRequest.getGender());
         user.setIsEmailVerified(false);
-        user.setIsPhoneVerified(false);
         user.setAddress(registerRequest.getAddress());
 
         User savedUser = userRepository.save(user);

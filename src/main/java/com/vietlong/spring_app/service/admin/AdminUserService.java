@@ -78,7 +78,6 @@ public class AdminUserService {
         user.setDateOfBirth(createUserRequest.getDateOfBirth());
         user.setGender(createUserRequest.getGender());
         user.setIsEmailVerified(createUserRequest.getIsEmailVerified());
-        user.setIsPhoneVerified(createUserRequest.getIsPhoneVerified());
         user.setAddress(createUserRequest.getAddress());
 
         User savedUser = userRepository.save(user);

@@ -24,7 +24,6 @@ public class UserResponse {
     private LocalDate dateOfBirth;
     private Gender gender;
     private Boolean isEmailVerified;
-    private Boolean isPhoneVerified;
     private String address;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

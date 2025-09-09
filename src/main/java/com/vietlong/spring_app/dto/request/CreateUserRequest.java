@@ -33,8 +33,6 @@ public class CreateUserRequest {
 
     private Boolean isEmailVerified = false;
 
-    private Boolean isPhoneVerified = false;
-
     @Size(max = 500, message = "Địa chỉ không được vượt quá 500 ký tự")
     private String address;
 }
