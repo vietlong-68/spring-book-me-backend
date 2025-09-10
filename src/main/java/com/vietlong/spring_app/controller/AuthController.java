@@ -64,7 +64,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<Void>> logout(
             Authentication authentication,
             HttpServletRequest request) throws AppException {

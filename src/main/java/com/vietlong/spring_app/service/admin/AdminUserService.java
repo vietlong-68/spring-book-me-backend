@@ -7,11 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.vietlong.spring_app.common.Mapper;
+import com.vietlong.spring_app.dto.request.ChangeUserRoleRequest;
 import com.vietlong.spring_app.dto.request.CreateUserRequest;
 import com.vietlong.spring_app.dto.request.UpdateUserRequest;
 import com.vietlong.spring_app.dto.response.UserResponse;
@@ -115,6 +118,21 @@ public class AdminUserService {
             user.setAddress(updateUserRequest.getAddress());
         }
 
+        User updatedUser = userRepository.save(user);
+        return Mapper.convertToUserResponse(updatedUser);
+    }
+
+    @Transactional
+    public UserResponse changeUserRole(String userId, ChangeUserRoleRequest changeUserRoleRequest) throws AppException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentAdminId = authentication.getName();
+
+        if (currentAdminId.equals(userId)) {
+            throw new AppException(ErrorCode.VALIDATION_ERROR, "Không thể thay đổi role của chính mình");
+        }
+
+        User user = findUserById(userId);
+        user.setRole(changeUserRoleRequest.getRole());
         User updatedUser = userRepository.save(user);
         return Mapper.convertToUserResponse(updatedUser);
     }

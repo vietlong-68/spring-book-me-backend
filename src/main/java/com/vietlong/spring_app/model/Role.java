@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum Role {
     USER("Người dùng", "Quyền cơ bản của người dùng"),
-    ADMIN("Quản trị viên", "Quyền quản trị hệ thống");
+    PROVIDER("Nhà cung cấp dịch vụ", "Quản lý lịch hẹn của mình, xác nhận/hủy appointment"),
+    ADMIN("Quản trị viên", "Toàn quyền quản trị hệ thống: quản lý user, provider, service, appointment và phân quyền");
 
     private final String displayName;
     private final String description;

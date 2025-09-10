@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.vietlong.spring_app.common.ApiResponse;
+import com.vietlong.spring_app.dto.request.ChangeUserRoleRequest;
 import com.vietlong.spring_app.dto.request.CreateUserRequest;
 import com.vietlong.spring_app.dto.request.UpdateUserRequest;
 import com.vietlong.spring_app.dto.response.UserResponse;
@@ -79,6 +80,18 @@ public class AdminUserController {
             HttpServletRequest httpRequest) throws AppException {
         UserResponse user = adminUserService.updateUser(userId, request);
         ApiResponse<UserResponse> response = ApiResponse.success(user, "cập nhật người dùng thành công", httpRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{userId}/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(
+            @PathVariable(name = "userId") String userId,
+            @Valid @RequestBody ChangeUserRoleRequest request,
+            HttpServletRequest httpRequest) throws AppException {
+        UserResponse user = adminUserService.changeUserRole(userId, request);
+        ApiResponse<UserResponse> response = ApiResponse.success(user, "thay đổi role người dùng thành công",
+                httpRequest);
         return ResponseEntity.ok(response);
     }
 
