@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+/**
+ * Controller xử lý các API liên quan đến thông tin user
+ * Bao gồm: lấy thông tin xác thực, profile user
+ */
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -21,8 +25,17 @@ public class UserController {
 
     private final AuthService authService;
 
+    /**
+     * API lấy thông tin xác thực của user hiện tại
+     * Yêu cầu: User phải đã đăng nhập và có role USER hoặc ADMIN hoặc PROVIDER
+     * 
+     * @param authentication Thông tin xác thực của user hiện tại
+     * @param request        HttpServletRequest
+     * @return Map chứa thông tin user, token info, permissions
+     * @throws AppException nếu có lỗi khi lấy thông tin
+     */
     @GetMapping("/authentication-info")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getAuthenticationInfo(
             Authentication authentication,
             HttpServletRequest request) throws AppException {

@@ -23,16 +23,19 @@ import com.vietlong.spring_app.exception.ErrorCode;
 import com.vietlong.spring_app.model.Role;
 import com.vietlong.spring_app.model.User;
 import com.vietlong.spring_app.repository.UserRepository;
+import com.vietlong.spring_app.service.UserService;
 
 @Service
 public class AdminUserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    public AdminUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AdminUserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserService userService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -125,7 +128,8 @@ public class AdminUserService {
     @Transactional
     public UserResponse changeUserRole(String userId, ChangeUserRoleRequest changeUserRoleRequest) throws AppException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentAdminId = authentication.getName();
+
+        String currentAdminId = userService.getUserIdFromAuthentication(authentication);
 
         if (currentAdminId.equals(userId)) {
             throw new AppException(ErrorCode.VALIDATION_ERROR, "Không thể thay đổi role của chính mình");

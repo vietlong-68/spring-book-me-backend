@@ -19,6 +19,10 @@ import com.vietlong.spring_app.service.admin.AdminUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+/**
+ * Controller xử lý các API quản lý user dành cho Admin
+ * Bao gồm: CRUD user, thay đổi role, phân trang, tìm kiếm
+ */
 @RestController
 @RequestMapping("/api/admin/users")
 public class AdminUserController {
@@ -28,6 +32,13 @@ public class AdminUserController {
         this.adminUserService = adminUserService;
     }
 
+    /**
+     * API lấy danh sách tất cả user trong hệ thống
+     * Yêu cầu: Chỉ ADMIN mới có quyền truy cập
+     * 
+     * @param httpRequest HttpServletRequest
+     * @return Danh sách tất cả user
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers(HttpServletRequest httpRequest) {
@@ -37,6 +48,17 @@ public class AdminUserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * API lấy danh sách user có phân trang và sắp xếp
+     * Yêu cầu: Chỉ ADMIN mới có quyền truy cập
+     * 
+     * @param page        Số trang (bắt đầu từ 0)
+     * @param size        Số lượng user mỗi trang
+     * @param sortBy      Trường để sắp xếp (mặc định: createdAt)
+     * @param sortDir     Hướng sắp xếp: asc/desc (mặc định: desc)
+     * @param httpRequest HttpServletRequest
+     * @return Page chứa danh sách user đã phân trang
+     */
     @GetMapping("/paginated")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<UserResponse>>> getAllUsersPaginated(
@@ -51,6 +73,15 @@ public class AdminUserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * API lấy thông tin chi tiết của một user theo ID
+     * Yêu cầu: Chỉ ADMIN mới có quyền truy cập
+     * 
+     * @param userId      ID của user cần lấy thông tin
+     * @param httpRequest HttpServletRequest
+     * @return Thông tin chi tiết của user
+     * @throws AppException nếu user không tồn tại
+     */
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> getUserById(
@@ -62,6 +93,15 @@ public class AdminUserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * API tạo user mới
+     * Yêu cầu: Chỉ ADMIN mới có quyền truy cập
+     * 
+     * @param request     Thông tin user cần tạo
+     * @param httpRequest HttpServletRequest
+     * @return Thông tin user đã được tạo
+     * @throws AppException nếu email đã tồn tại hoặc validation lỗi
+     */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> createUser(
@@ -72,6 +112,16 @@ public class AdminUserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /**
+     * API cập nhật thông tin user
+     * Yêu cầu: Chỉ ADMIN mới có quyền truy cập
+     * 
+     * @param userId      ID của user cần cập nhật
+     * @param request     Thông tin cần cập nhật (chỉ cập nhật các field có giá trị)
+     * @param httpRequest HttpServletRequest
+     * @return Thông tin user đã được cập nhật
+     * @throws AppException nếu user không tồn tại hoặc validation lỗi
+     */
     @PatchMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
@@ -83,6 +133,18 @@ public class AdminUserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * API thay đổi role của user
+     * Yêu cầu: Chỉ ADMIN mới có quyền truy cập
+     * Lưu ý: Admin không thể thay đổi role của chính mình
+     * 
+     * @param userId      ID của user cần thay đổi role
+     * @param request     Chứa role mới (USER, PROVIDER, ADMIN)
+     * @param httpRequest HttpServletRequest
+     * @return Thông tin user đã được cập nhật role
+     * @throws AppException nếu user không tồn tại, admin cố thay đổi role của chính
+     *                      mình
+     */
     @PutMapping("/{userId}/role")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(
@@ -95,6 +157,15 @@ public class AdminUserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * API xóa user khỏi hệ thống
+     * Yêu cầu: Chỉ ADMIN mới có quyền truy cập
+     * 
+     * @param userId      ID của user cần xóa
+     * @param httpRequest HttpServletRequest
+     * @return ApiResponse với thông báo xóa thành công
+     * @throws AppException nếu user không tồn tại
+     */
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteUser(

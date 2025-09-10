@@ -3,7 +3,7 @@ spring:
         name: book-me
 
     datasource:
-        url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:spring_app_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+        url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:book_me_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
         username: ${DB_USERNAME:root}
         password: ${DB_PASSWORD:123456}
         driver-class-name: com.mysql.cj.jdbc.Driver

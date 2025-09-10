@@ -25,6 +25,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.Date;
 
+/**
+ * Controller xử lý các API liên quan đến xác thực (authentication)
+ * Bao gồm: đăng ký, đăng nhập, đăng xuất, kiểm tra token
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -37,6 +41,14 @@ public class AuthController {
         this.tokenBlacklistService = tokenBlacklistService;
     }
 
+    /**
+     * API đăng ký tài khoản mới
+     * 
+     * @param registerRequest Thông tin đăng ký (email, password, displayName, ...)
+     * @param request         HttpServletRequest
+     * @return UserResponse với thông tin user đã tạo
+     * @throws AppException nếu email đã tồn tại hoặc validation lỗi
+     */
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest registerRequest,
             HttpServletRequest request) throws AppException {
@@ -45,6 +57,14 @@ public class AuthController {
                 .body(ApiResponse.success(userResponse, "Đăng ký tài khoản thành công", request));
     }
 
+    /**
+     * API đăng nhập hệ thống
+     * 
+     * @param loginRequest Thông tin đăng nhập (email, password)
+     * @param request      HttpServletRequest
+     * @return LoginResponse chứa JWT token
+     * @throws AppException nếu thông tin đăng nhập không đúng
+     */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest loginRequest,
             HttpServletRequest request) throws AppException {
@@ -52,6 +72,14 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(loginResponse, "Đăng nhập thành công", request));
     }
 
+    /**
+     * API kiểm tra tính hợp lệ của JWT token
+     * 
+     * @param introspectRequest Chứa token cần kiểm tra
+     * @param request           HttpServletRequest
+     * @return IntrospectTokenResponse với thông tin token (valid/invalid, claims,
+     *         ...)
+     */
     @PostMapping("/introspect")
     public ResponseEntity<ApiResponse<IntrospectTokenResponse>> introspectToken(
             @Valid @RequestBody IntrospectTokenRequest introspectRequest,
@@ -63,6 +91,15 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(introspectResponse, message, request));
     }
 
+    /**
+     * API đăng xuất khỏi hệ thống
+     * Yêu cầu: User phải đã đăng nhập (có JWT token hợp lệ)
+     * 
+     * @param authentication Thông tin xác thực của user hiện tại
+     * @param request        HttpServletRequest
+     * @return ApiResponse với thông báo đăng xuất thành công
+     * @throws AppException nếu có lỗi trong quá trình đăng xuất
+     */
     @PostMapping("/logout")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<Void>> logout(
