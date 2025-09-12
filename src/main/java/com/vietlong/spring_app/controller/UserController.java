@@ -3,6 +3,8 @@ package com.vietlong.spring_app.controller;
 import com.vietlong.spring_app.common.ApiResponse;
 import com.vietlong.spring_app.exception.AppException;
 import com.vietlong.spring_app.service.AuthService;
+import com.vietlong.spring_app.service.UserService;
+import com.vietlong.spring_app.dto.response.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import java.util.Map;
 public class UserController {
 
     private final AuthService authService;
+    private final UserService userService;
 
     /**
      * API lấy thông tin xác thực của user hiện tại
@@ -46,5 +49,25 @@ public class UserController {
                 : "Lấy thông tin xác thực thành công";
 
         return ResponseEntity.ok(ApiResponse.success(userAuthenticationInfo, message, request));
+    }
+
+    /**
+     * API lấy thông tin cá nhân của user hiện tại
+     * Yêu cầu: User phải đã đăng nhập và có role USER hoặc ADMIN hoặc PROVIDER
+     * 
+     * @param authentication Thông tin xác thực của user hiện tại
+     * @param request        HttpServletRequest
+     * @return UserResponse chứa thông tin cá nhân đầy đủ
+     * @throws AppException nếu có lỗi khi lấy thông tin
+     */
+    @GetMapping("/profile")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+    public ResponseEntity<ApiResponse<UserResponse>> getCurrentUserProfile(
+            Authentication authentication,
+            HttpServletRequest request) throws AppException {
+
+        UserResponse userProfile = userService.getCurrentUserProfile(authentication);
+
+        return ResponseEntity.ok(ApiResponse.success(userProfile, "Lấy thông tin cá nhân thành công", request));
     }
 }
