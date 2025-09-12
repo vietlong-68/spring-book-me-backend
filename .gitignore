@@ -40,6 +40,7 @@ out/
 /logs/
 
 # Others
+/uploads/
 *.md
 *.http
 *.json

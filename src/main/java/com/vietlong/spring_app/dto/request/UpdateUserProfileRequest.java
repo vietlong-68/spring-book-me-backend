@@ -20,10 +20,6 @@ public class UpdateUserProfileRequest {
     @Size(max = 100, message = "Tên hiển thị không được vượt quá 100 ký tự")
     private String displayName;
 
-    @Email(message = "Email không hợp lệ")
-    @NotBlank(message = "Email không được để trống")
-    private String email;
-
     @Size(max = 15, message = "Số điện thoại không được vượt quá 15 ký tự")
     private String phoneNumber;
 

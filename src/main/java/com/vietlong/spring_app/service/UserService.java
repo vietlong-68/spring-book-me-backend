@@ -83,12 +83,6 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy thông tin người dùng"));
 
-        if (!user.getEmail().equals(request.getEmail())) {
-            if (userRepository.existsByEmail(request.getEmail())) {
-                throw new AppException(ErrorCode.EMAIL_EXISTED, "Email đã được sử dụng bởi tài khoản khác");
-            }
-        }
-
         if (request.getPhoneNumber() != null && !request.getPhoneNumber().isEmpty()) {
             if (!request.getPhoneNumber().equals(user.getPhoneNumber()) &&
                     userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
@@ -97,7 +91,6 @@ public class UserService {
         }
 
         user.setDisplayName(request.getDisplayName());
-        user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setDateOfBirth(request.getDateOfBirth());
         user.setGender(request.getGender());
@@ -108,7 +101,7 @@ public class UserService {
         return UserResponse.builder()
                 .id(updatedUser.getId())
                 .displayName(updatedUser.getDisplayName())
-                .email(updatedUser.getEmail())
+                .email(user.getEmail())
                 .role(updatedUser.getRole())
                 .phoneNumber(updatedUser.getPhoneNumber())
                 .avatarUrl(updatedUser.getAvatarUrl())
