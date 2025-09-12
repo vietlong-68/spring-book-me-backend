@@ -2,14 +2,16 @@ package com.vietlong.spring_app.controller;
 
 import com.vietlong.spring_app.common.ApiResponse;
 import com.vietlong.spring_app.exception.AppException;
+import com.vietlong.spring_app.exception.ErrorCode;
 import com.vietlong.spring_app.service.AuthService;
 import com.vietlong.spring_app.service.UserService;
 import com.vietlong.spring_app.dto.response.UserResponse;
 import com.vietlong.spring_app.dto.request.UpdateUserProfileRequest;
 import com.vietlong.spring_app.dto.request.ChangePasswordRequest;
 import com.vietlong.spring_app.dto.request.UpdateAvatarRequest;
+import com.vietlong.spring_app.service.uploadfile.FileUploadService;
+import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -24,11 +26,17 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/user")
-@RequiredArgsConstructor
 public class UserController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final FileUploadService fileUploadService;
+
+    public UserController(AuthService authService, UserService userService, FileUploadService fileUploadService) {
+        this.authService = authService;
+        this.userService = userService;
+        this.fileUploadService = fileUploadService;
+    }
 
     /**
      * API lấy thông tin xác thực của user hiện tại
@@ -145,20 +153,31 @@ public class UserController {
      * Yêu cầu: User phải đã đăng nhập và có role USER hoặc ADMIN hoặc PROVIDER
      * 
      * @param authentication Thông tin xác thực của user hiện tại
-     * @param request        UpdateAvatarRequest chứa URL ảnh đại diện mới
+     * @param file           File ảnh đại diện cần upload
      * @param request        HttpServletRequest
      * @return UserResponse chứa thông tin cá nhân đã cập nhật
-     * @throws AppException nếu có lỗi khi cập nhật
+     * @throws AppException nếu có lỗi khi upload hoặc cập nhật
      */
     @PutMapping("/avatar")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<UserResponse>> updateAvatar(
             Authentication authentication,
-            @Valid @RequestBody UpdateAvatarRequest request,
-            HttpServletRequest httpRequest) throws AppException {
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request) throws AppException {
 
-        UserResponse updatedProfile = userService.updateAvatar(authentication, request);
+        try {
+            String avatarUrl = fileUploadService.uploadFile(file);
 
-        return ResponseEntity.ok(ApiResponse.success(updatedProfile, "Cập nhật ảnh đại diện thành công", httpRequest));
+            UpdateAvatarRequest updateRequest = UpdateAvatarRequest.builder()
+                    .avatarUrl(avatarUrl)
+                    .build();
+
+            UserResponse updatedProfile = userService.updateAvatar(authentication, updateRequest);
+
+            return ResponseEntity.ok(ApiResponse.success(updatedProfile, "Cập nhật ảnh đại diện thành công", request));
+
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED, "Lỗi khi upload ảnh đại diện: " + e.getMessage());
+        }
     }
 }
