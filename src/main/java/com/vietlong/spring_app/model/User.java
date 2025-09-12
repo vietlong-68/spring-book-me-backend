@@ -3,9 +3,6 @@ package com.vietlong.spring_app.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +20,6 @@ import java.time.LocalDateTime;
         @Index(name = "idx_user_phone", columnList = "phoneNumber", unique = true),
         @Index(name = "idx_user_role", columnList = "role")
 })
-@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -63,11 +59,9 @@ public class User {
     @Column(name = "address", length = 500)
     private String address;
 
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 

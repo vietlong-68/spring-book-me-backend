@@ -2,9 +2,6 @@ package com.vietlong.spring_app.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,11 +20,10 @@ import java.time.LocalDateTime;
         @Index(name = "idx_service_active", columnList = "is_active"),
         @Index(name = "idx_service_name", columnList = "service_name")
 })
-@EntityListeners(AuditingEntityListener.class)
 public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "service_id", updatable = false, nullable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,11 +61,9 @@ public class Service {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
@@ -98,5 +92,16 @@ public class Service {
 
     public int getTotalDurationMinutes() {
         return this.durationMinutes + this.bufferTimeAfter;
+    }
+
+    public boolean isValidForBooking() {
+        return this.isActive() &&
+                this.durationMinutes != null && this.durationMinutes > 0 &&
+                this.price != null && this.price.compareTo(BigDecimal.ZERO) > 0 &&
+                this.provider != null && this.provider.isActive();
+    }
+
+    public boolean isGroupService() {
+        return this.capacity != null && this.capacity > 1;
     }
 }

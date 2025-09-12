@@ -2,9 +2,6 @@ package com.vietlong.spring_app.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +18,6 @@ import java.time.LocalDateTime;
         @Index(name = "idx_provider_status", columnList = "status"),
         @Index(name = "idx_provider_verified", columnList = "is_verified")
 })
-@EntityListeners(AuditingEntityListener.class)
 public class Provider {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -62,11 +58,9 @@ public class Provider {
     @Column(name = "is_verified", nullable = false)
     private Boolean isVerified = false;
 
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
