@@ -49,4 +49,16 @@ public class Category {
     private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    public boolean isActive() {
+        return this.isActive != null && this.isActive;
+    }
+
+    public void activate() {
+        this.isActive = true;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
 }

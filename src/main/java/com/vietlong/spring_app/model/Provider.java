@@ -64,9 +64,6 @@ public class Provider {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
     @PrePersist
     private void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -90,15 +87,4 @@ public class Provider {
         return this.status == ProviderStatus.SUSPENDED;
     }
 
-    public boolean isDeleted() {
-        return this.deletedAt != null;
-    }
-
-    public void softDelete() {
-        this.deletedAt = LocalDateTime.now();
-    }
-
-    public void restore() {
-        this.deletedAt = null;
-    }
 }

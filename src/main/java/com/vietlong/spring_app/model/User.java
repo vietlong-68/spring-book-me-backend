@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = { "id", "displayName", "email", "role" })
-@EqualsAndHashCode(of = { "id", "email" })
+@EqualsAndHashCode(of = { "id" })
 @Entity
 @Table(name = "users", indexes = {
         @Index(name = "idx_user_email", columnList = "email", unique = true),
@@ -78,6 +78,10 @@ public class User {
 
     public boolean isUser() {
         return this.role == Role.USER;
+    }
+
+    public boolean isProvider() {
+        return this.role == Role.PROVIDER;
     }
 
     @PrePersist
