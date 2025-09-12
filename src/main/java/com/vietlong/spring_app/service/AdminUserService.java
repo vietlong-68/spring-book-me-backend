@@ -1,4 +1,4 @@
-package com.vietlong.spring_app.service.admin;
+package com.vietlong.spring_app.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,6 @@ import com.vietlong.spring_app.exception.ErrorCode;
 import com.vietlong.spring_app.model.Role;
 import com.vietlong.spring_app.model.User;
 import com.vietlong.spring_app.repository.UserRepository;
-import com.vietlong.spring_app.service.UserService;
 
 @Service
 public class AdminUserService {
