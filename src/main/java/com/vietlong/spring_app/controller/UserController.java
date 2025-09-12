@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,5 +70,25 @@ public class UserController {
         UserResponse userProfile = userService.getCurrentUserProfile(authentication);
 
         return ResponseEntity.ok(ApiResponse.success(userProfile, "Lấy thông tin cá nhân thành công", request));
+    }
+
+    /**
+     * API lấy thông tin cá nhân của một người dùng bất kỳ theo ID
+     * Yêu cầu: User phải đã đăng nhập và có role ADMIN
+     * 
+     * @param userId  ID của người dùng cần lấy thông tin
+     * @param request HttpServletRequest
+     * @return UserResponse chứa thông tin cá nhân đầy đủ
+     * @throws AppException nếu có lỗi khi lấy thông tin
+     */
+    @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<UserResponse>> getUserProfileById(
+            @PathVariable String userId,
+            HttpServletRequest request) throws AppException {
+
+        UserResponse userProfile = userService.getUserProfileById(userId);
+
+        return ResponseEntity.ok(ApiResponse.success(userProfile, "Lấy thông tin người dùng thành công", request));
     }
 }

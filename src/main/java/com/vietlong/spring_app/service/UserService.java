@@ -50,4 +50,25 @@ public class UserService {
                 .build();
     }
 
+    public UserResponse getUserProfileById(String userId) throws AppException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND,
+                        "Không tìm thấy người dùng với ID: " + userId));
+
+        return UserResponse.builder()
+                .id(user.getId())
+                .displayName(user.getDisplayName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .phoneNumber(user.getPhoneNumber())
+                .avatarUrl(user.getAvatarUrl())
+                .dateOfBirth(user.getDateOfBirth())
+                .gender(user.getGender())
+                .isEmailVerified(user.getIsEmailVerified())
+                .address(user.getAddress())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
+    }
+
 }
