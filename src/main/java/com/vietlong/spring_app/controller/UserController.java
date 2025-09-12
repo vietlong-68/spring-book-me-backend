@@ -82,7 +82,7 @@ public class UserController {
      * @throws AppException nếu có lỗi khi lấy thông tin
      */
     @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<UserResponse>> getUserProfileById(
             @PathVariable String userId,
             HttpServletRequest request) throws AppException {
