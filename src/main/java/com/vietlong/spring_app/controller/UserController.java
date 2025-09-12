@@ -5,15 +5,16 @@ import com.vietlong.spring_app.exception.AppException;
 import com.vietlong.spring_app.service.AuthService;
 import com.vietlong.spring_app.service.UserService;
 import com.vietlong.spring_app.dto.response.UserResponse;
+import com.vietlong.spring_app.dto.request.UpdateUserProfileRequest;
+import com.vietlong.spring_app.dto.request.ChangePasswordRequest;
+import com.vietlong.spring_app.dto.request.UpdateAvatarRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.Map;
 
@@ -90,5 +91,74 @@ public class UserController {
         UserResponse userProfile = userService.getUserProfileById(userId);
 
         return ResponseEntity.ok(ApiResponse.success(userProfile, "Lấy thông tin người dùng thành công", request));
+    }
+
+    /**
+     * API cập nhật thông tin cá nhân của user hiện tại
+     * Yêu cầu: User phải đã đăng nhập và có role USER hoặc ADMIN hoặc PROVIDER
+     * 
+     * @param authentication Thông tin xác thực của user hiện tại
+     * @param request        UpdateUserProfileRequest chứa thông tin cần cập nhật
+     * @param request        HttpServletRequest
+     * @return UserResponse chứa thông tin cá nhân đã cập nhật
+     * @throws AppException nếu có lỗi khi cập nhật
+     */
+    @PutMapping("/profile")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUserProfile(
+            Authentication authentication,
+            @Valid @RequestBody UpdateUserProfileRequest request,
+            HttpServletRequest httpRequest) throws AppException {
+
+        UserResponse updatedProfile = userService.updateUserProfile(authentication, request);
+
+        return ResponseEntity
+                .ok(ApiResponse.success(updatedProfile, "Cập nhật thông tin cá nhân thành công", httpRequest));
+    }
+
+    /**
+     * API thay đổi mật khẩu của user hiện tại
+     * Yêu cầu: User phải đã đăng nhập và có role USER hoặc ADMIN hoặc PROVIDER
+     * 
+     * @param authentication Thông tin xác thực của user hiện tại
+     * @param request        ChangePasswordRequest chứa mật khẩu hiện tại và mật
+     *                       khẩu mới
+     * @param request        HttpServletRequest
+     * @return ApiResponse thông báo thành công
+     * @throws AppException nếu có lỗi khi thay đổi mật khẩu
+     */
+    @PutMapping("/change-password")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            Authentication authentication,
+            @Valid @RequestBody ChangePasswordRequest request,
+            HttpServletRequest httpRequest) throws AppException {
+
+        userService.changePassword(authentication, request);
+
+        return ResponseEntity.ok(ApiResponse.success("Mật khẩu đã được thay đổi thành công",
+                "Thay đổi mật khẩu thành công", httpRequest));
+    }
+
+    /**
+     * API cập nhật ảnh đại diện của user hiện tại
+     * Yêu cầu: User phải đã đăng nhập và có role USER hoặc ADMIN hoặc PROVIDER
+     * 
+     * @param authentication Thông tin xác thực của user hiện tại
+     * @param request        UpdateAvatarRequest chứa URL ảnh đại diện mới
+     * @param request        HttpServletRequest
+     * @return UserResponse chứa thông tin cá nhân đã cập nhật
+     * @throws AppException nếu có lỗi khi cập nhật
+     */
+    @PutMapping("/avatar")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+    public ResponseEntity<ApiResponse<UserResponse>> updateAvatar(
+            Authentication authentication,
+            @Valid @RequestBody UpdateAvatarRequest request,
+            HttpServletRequest httpRequest) throws AppException {
+
+        UserResponse updatedProfile = userService.updateAvatar(authentication, request);
+
+        return ResponseEntity.ok(ApiResponse.success(updatedProfile, "Cập nhật ảnh đại diện thành công", httpRequest));
     }
 }
