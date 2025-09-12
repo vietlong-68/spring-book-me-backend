@@ -14,7 +14,7 @@ import com.vietlong.spring_app.dto.request.CreateUserRequest;
 import com.vietlong.spring_app.dto.request.UpdateUserRequest;
 import com.vietlong.spring_app.dto.response.UserResponse;
 import com.vietlong.spring_app.exception.AppException;
-import com.vietlong.spring_app.service.admin.AdminUserService;
+import com.vietlong.spring_app.service.AdminUserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

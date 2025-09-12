@@ -11,6 +11,8 @@ public enum ErrorCode {
     PHONE_EXISTED("USER_008", "Số điện thoại đã được sử dụng"),
     INVALID_PASSWORD("USER_009", "Mật khẩu không đúng"),
     PASSWORD_NOT_MATCH("USER_010", "Mật khẩu xác nhận không khớp"),
+    INVALID_REQUEST("USER_011", "Yêu cầu không hợp lệ"),
+    ACCESS_DENIED("USER_012", "Không có quyền truy cập"),
     INTERNAL_SERVER_ERROR("SYS_001", "Lỗi hệ thống nội bộ"),
     VALIDATION_ERROR("SYS_002", "Lỗi xác thực dữ liệu"),
     RESOURCE_NOT_FOUND("SYS_003", "Không tìm thấy tài nguyên"),
