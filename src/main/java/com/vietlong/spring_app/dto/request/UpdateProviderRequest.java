@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateProviderApplicationRequest {
+public class UpdateProviderRequest {
 
     @NotBlank(message = "Tên doanh nghiệp không được để trống")
     @Size(max = 255, message = "Tên doanh nghiệp không được vượt quá 255 ký tự")

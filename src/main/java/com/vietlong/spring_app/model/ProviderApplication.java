@@ -1,6 +1,7 @@
 package com.vietlong.spring_app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -38,9 +39,11 @@ public class ProviderApplication {
     @Column(name = "address", columnDefinition = "TEXT")
     private String address;
 
+    @Pattern(regexp = "^[0-9]{10,11}$", message = "Số điện thoại phải có 10-11 chữ số")
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+    @Pattern(regexp = "^(https?://)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([/\\w \\.-]*)*/?$", message = "Website không đúng định dạng URL")
     @Column(name = "website", length = 255)
     private String website;
 

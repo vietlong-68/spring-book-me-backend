@@ -1,6 +1,7 @@
 package com.vietlong.spring_app.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -37,9 +38,11 @@ public class Provider {
     @Column(name = "address", columnDefinition = "TEXT")
     private String address;
 
+    @Pattern(regexp = "^[0-9]{10,11}$", message = "Số điện thoại phải có 10-11 chữ số")
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
+    @Pattern(regexp = "^(https?://)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([/\\w \\.-]*)*/?$", message = "Website không đúng định dạng URL")
     @Column(name = "website", length = 500)
     private String websiteUrl;
 
@@ -52,7 +55,7 @@ public class Provider {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     @Builder.Default
-    private ProviderStatus status = ProviderStatus.PENDING_APPROVAL;
+    private ProviderStatus status = ProviderStatus.ACTIVE;
 
     @Builder.Default
     @Column(name = "is_verified", nullable = false)
@@ -80,7 +83,7 @@ public class Provider {
     }
 
     public boolean isPending() {
-        return this.status == ProviderStatus.PENDING_APPROVAL;
+        return false;
     }
 
     public boolean isSuspended() {

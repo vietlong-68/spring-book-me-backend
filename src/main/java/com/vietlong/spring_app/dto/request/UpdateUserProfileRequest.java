@@ -1,7 +1,6 @@
 package com.vietlong.spring_app.dto.request;
 
 import com.vietlong.spring_app.model.Gender;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

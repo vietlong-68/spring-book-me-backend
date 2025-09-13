@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 public enum ProviderStatus {
-    PENDING_APPROVAL("Chờ duyệt", "Nhà cung cấp đang chờ admin duyệt"),
     ACTIVE("Hoạt động", "Nhà cung cấp đang hoạt động bình thường"),
     SUSPENDED("Tạm khóa", "Nhà cung cấp bị tạm khóa do vi phạm");
 
@@ -20,7 +19,7 @@ public enum ProviderStatus {
 
     public static ProviderStatus fromString(String statusString) throws AppException {
         if (statusString == null || statusString.trim().isEmpty()) {
-            return PENDING_APPROVAL;
+            return ACTIVE;
         }
 
         try {
