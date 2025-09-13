@@ -6,6 +6,7 @@ import com.vietlong.spring_app.dto.request.ReviewProviderApplicationRequest;
 import com.vietlong.spring_app.dto.request.UpdateProviderApplicationRequest;
 import com.vietlong.spring_app.dto.response.ProviderApplicationResponse;
 import com.vietlong.spring_app.exception.AppException;
+import com.vietlong.spring_app.exception.ErrorCode;
 import com.vietlong.spring_app.model.ProviderApplicationStatus;
 import com.vietlong.spring_app.service.ProviderApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,6 +51,20 @@ public class ProviderApplicationController {
                         @Valid @ModelAttribute CreateProviderApplicationRequest request,
                         @RequestParam(name = "businessLicenseFile") MultipartFile businessLicenseFile,
                         HttpServletRequest httpRequest) throws AppException {
+
+                if (businessLicenseFile == null || businessLicenseFile.isEmpty()) {
+                        throw new AppException(ErrorCode.BAD_REQUEST, "File giấy phép kinh doanh không được để trống");
+                }
+
+                String contentType = businessLicenseFile.getContentType();
+                if (contentType == null || !contentType.startsWith("image/")) {
+                        throw new AppException(ErrorCode.BAD_REQUEST,
+                                        "File giấy phép kinh doanh phải là định dạng ảnh (JPG, PNG, JPEG, GIF)");
+                }
+
+                if (businessLicenseFile.getSize() > 10 * 1024 * 1024) {
+                        throw new AppException(ErrorCode.BAD_REQUEST, "Kích thước file không được vượt quá 10MB");
+                }
 
                 ProviderApplicationResponse response = providerApplicationService.createApplication(
                                 authentication, request, businessLicenseFile);
