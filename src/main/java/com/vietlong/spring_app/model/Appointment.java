@@ -3,7 +3,6 @@ package com.vietlong.spring_app.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,18 +10,13 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(of = { "id", "startTime", "endTime", "status", "finalPrice" })
+@ToString(of = { "id", "status" })
 @EqualsAndHashCode(of = { "id" })
 @Entity
 @Table(name = "appointments", indexes = {
         @Index(name = "idx_appointment_user_id", columnList = "user_id"),
-        @Index(name = "idx_appointment_provider_id", columnList = "provider_id"),
-        @Index(name = "idx_appointment_service_id", columnList = "service_id"),
-        @Index(name = "idx_appointment_status", columnList = "status"),
-        @Index(name = "idx_appointment_start_time", columnList = "start_time"),
-        @Index(name = "idx_appointment_provider_start", columnList = "provider_id, start_time")
-}, uniqueConstraints = {
-        @UniqueConstraint(name = "uk_appointment_provider_time", columnNames = { "provider_id", "start_time" })
+        @Index(name = "idx_appointment_schedule_id", columnList = "provider_schedule_id"),
+        @Index(name = "idx_appointment_status", columnList = "status")
 })
 public class Appointment {
     @Id
@@ -35,26 +29,13 @@ public class Appointment {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "provider_id", nullable = false)
-    private Provider provider;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id", nullable = false)
-    private Service service;
-
-    @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
-
-    @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    @JoinColumn(name = "provider_schedule_id", nullable = false)
+    private ProviderSchedule providerSchedule;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     @Builder.Default
-    private AppointmentStatus status = AppointmentStatus.PENDING;
-
-    @Column(name = "final_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal finalPrice;
+    private AppointmentStatus status = AppointmentStatus.SCHEDULED;
 
     @Column(name = "notes_from_user", columnDefinition = "TEXT")
     private String notesFromUser;
@@ -105,12 +86,6 @@ public class Appointment {
 
     public void confirm() {
         if (this.canBeConfirmed()) {
-            if (!this.provider.isActive()) {
-                throw new IllegalStateException("Cannot confirm appointment: Provider is not active");
-            }
-            if (!this.service.isActive()) {
-                throw new IllegalStateException("Cannot confirm appointment: Service is not active");
-            }
             this.status = AppointmentStatus.CONFIRMED;
         } else {
             throw new IllegalStateException("Cannot confirm appointment with status: " + this.status);
@@ -126,22 +101,6 @@ public class Appointment {
         }
     }
 
-    public void markAsNoShow() {
-        if (this.status == AppointmentStatus.CONFIRMED || this.status == AppointmentStatus.IN_PROGRESS) {
-            this.status = AppointmentStatus.NO_SHOW;
-        } else {
-            throw new IllegalStateException("Cannot mark as no-show appointment with status: " + this.status);
-        }
-    }
-
-    public void start() {
-        if (this.status == AppointmentStatus.CONFIRMED) {
-            this.status = AppointmentStatus.IN_PROGRESS;
-        } else {
-            throw new IllegalStateException("Cannot start appointment with status: " + this.status);
-        }
-    }
-
     public void complete() {
         if (this.canBeCompleted()) {
             this.status = AppointmentStatus.COMPLETED;
@@ -150,46 +109,47 @@ public class Appointment {
         }
     }
 
-    public boolean isOverlapping(LocalDateTime start, LocalDateTime end) {
-        return this.startTime.isBefore(end) && this.endTime.isAfter(start);
-    }
-
     public boolean isInPast() {
-        return this.endTime.isBefore(LocalDateTime.now());
+        return this.providerSchedule.getEndTime().isBefore(LocalDateTime.now());
     }
 
     public boolean isInFuture() {
-        return this.startTime.isAfter(LocalDateTime.now());
+        return this.providerSchedule.getStartTime().isAfter(LocalDateTime.now());
     }
 
     public boolean isToday() {
         LocalDateTime now = LocalDateTime.now();
-        return this.startTime.toLocalDate().equals(now.toLocalDate());
+        return this.providerSchedule.getStartTime().toLocalDate().equals(now.toLocalDate());
     }
 
     public boolean isValidForBooking() {
-        if (this.startTime == null || this.endTime == null) {
+        if (this.providerSchedule == null) {
             return false;
         }
-        if (!this.startTime.isBefore(this.endTime)) {
-            return false;
-        }
-        if (this.startTime.isBefore(LocalDateTime.now())) {
-            return false;
-        }
-        if (this.provider == null || !this.provider.isActive()) {
-            return false;
-        }
-        if (this.service == null || !this.service.isActive()) {
+        if (!this.providerSchedule.isValidForBooking()) {
             return false;
         }
         return true;
     }
 
-    public boolean conflictsWith(Appointment other) {
-        if (other == null || other.getId().equals(this.getId())) {
-            return false;
+    /**
+     * Tạo appointment từ ProviderSchedule
+     */
+    public static Appointment createFromSchedule(User user, ProviderSchedule schedule, String notes) {
+        if (!schedule.canBeBooked()) {
+            throw new IllegalStateException("Cannot create appointment from unavailable schedule");
         }
-        return this.isOverlapping(other.startTime, other.endTime);
+
+        Appointment appointment = Appointment.builder()
+                .user(user)
+                .providerSchedule(schedule)
+                .status(AppointmentStatus.SCHEDULED)
+                .notesFromUser(notes)
+                .build();
+
+        // Book slot trong schedule
+        schedule.book();
+
+        return appointment;
     }
 }

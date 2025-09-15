@@ -5,36 +5,36 @@ import com.vietlong.spring_app.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public enum AppointmentStatus {
-    SCHEDULED("Đã đặt lịch", "Lịch hẹn đã được đặt và chờ xác nhận"),
-    CONFIRMED("Đã xác nhận", "Lịch hẹn đã được provider xác nhận"),
+public enum ScheduleStatus {
+    AVAILABLE("Có sẵn", "Slot có thể đặt lịch"),
+    BOOKED("Đã đặt", "Slot đã được đặt lịch"),
     COMPLETED("Hoàn thành", "Dịch vụ đã hoàn thành"),
-    CANCELLED("Đã hủy", "Lịch hẹn đã bị hủy");
+    CANCELLED("Đã hủy", "Slot đã bị hủy");
 
     private final String displayName;
     private final String description;
 
-    AppointmentStatus(String displayName, String description) {
+    ScheduleStatus(String displayName, String description) {
         this.displayName = displayName;
         this.description = description;
     }
 
-    public static AppointmentStatus fromString(String statusString) throws AppException {
+    public static ScheduleStatus fromString(String statusString) throws AppException {
         if (statusString == null || statusString.trim().isEmpty()) {
-            return SCHEDULED;
+            return AVAILABLE;
         }
 
         try {
-            return AppointmentStatus.valueOf(statusString.trim().toUpperCase());
+            return ScheduleStatus.valueOf(statusString.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new AppException(ErrorCode.VALIDATION_ERROR,
-                    "Invalid appointment status: " + statusString + ". Valid statuses are: "
+                    "Invalid schedule status: " + statusString + ". Valid statuses are: "
                             + String.join(", ", getStatusNames()));
         }
     }
 
     public static String[] getStatusNames() {
-        AppointmentStatus[] statuses = AppointmentStatus.values();
+        ScheduleStatus[] statuses = ScheduleStatus.values();
         String[] statusNames = new String[statuses.length];
         for (int i = 0; i < statuses.length; i++) {
             statusNames[i] = statuses[i].name();
@@ -42,8 +42,12 @@ public enum AppointmentStatus {
         return statusNames;
     }
 
-    public boolean isActive() {
-        return this == SCHEDULED || this == CONFIRMED;
+    public boolean isAvailable() {
+        return this == AVAILABLE;
+    }
+
+    public boolean isBooked() {
+        return this == BOOKED;
     }
 
     public boolean isCompleted() {
@@ -54,15 +58,11 @@ public enum AppointmentStatus {
         return this == CANCELLED;
     }
 
+    public boolean canBeBooked() {
+        return this == AVAILABLE;
+    }
+
     public boolean canBeCancelled() {
-        return this == SCHEDULED || this == CONFIRMED;
-    }
-
-    public boolean canBeConfirmed() {
-        return this == SCHEDULED;
-    }
-
-    public boolean canBeCompleted() {
-        return this == CONFIRMED;
+        return this == AVAILABLE || this == BOOKED;
     }
 }
