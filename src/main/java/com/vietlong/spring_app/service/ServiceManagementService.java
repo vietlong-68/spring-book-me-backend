@@ -29,23 +29,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ServiceManagementService {
 
-    private ServiceRepository serviceRepository;
-    private CategoryRepository categoryRepository;
-    private ProviderRepository providerRepository;
-    private UserRepository userRepository;
-    private FileUploadService fileUploadService;
-
-    public ServiceManagementService(ServiceRepository serviceRepository,
-            CategoryRepository categoryRepository,
-            ProviderRepository providerRepository,
-            UserRepository userRepository,
-            FileUploadService fileUploadService) {
-        this.serviceRepository = serviceRepository;
-        this.categoryRepository = categoryRepository;
-        this.providerRepository = providerRepository;
-        this.userRepository = userRepository;
-        this.fileUploadService = fileUploadService;
-    }
+    private final ServiceRepository serviceRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProviderRepository providerRepository;
+    private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
 
     public ServiceResponse createService(String providerId, CreateServiceRequest request, MultipartFile imageFile,
             Authentication authentication)

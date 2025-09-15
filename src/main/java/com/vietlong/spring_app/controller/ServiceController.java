@@ -35,7 +35,7 @@ public class ServiceController {
 
     /**
      * API lấy danh sách dịch vụ công khai (chỉ active)
-     * Yêu cầu: Không cần authentication
+     * Yêu cầu: Cần authentication
      * 
      * @param page        Số trang (bắt đầu từ 0)
      * @param size        Số lượng dịch vụ mỗi trang
@@ -62,7 +62,7 @@ public class ServiceController {
 
     /**
      * API lấy chi tiết dịch vụ công khai theo ID
-     * Yêu cầu: Không cần authentication
+     * Yêu cầu: Cần authentication
      * 
      * @param serviceId   ID của dịch vụ
      * @param httpRequest HttpServletRequest
@@ -81,7 +81,7 @@ public class ServiceController {
 
     /**
      * API lấy danh sách danh mục công khai (chỉ active)
-     * Yêu cầu: Không cần authentication
+     * Yêu cầu: Cần authentication
      * 
      * @param httpRequest HttpServletRequest
      * @return Danh sách danh mục công khai
@@ -95,7 +95,7 @@ public class ServiceController {
 
     /**
      * API lọc dịch vụ theo danh mục (chỉ active)
-     * Yêu cầu: Không cần authentication
+     * Yêu cầu: Cần authentication
      * 
      * @param categoryId  ID của danh mục
      * @param page        Số trang (bắt đầu từ 0)
