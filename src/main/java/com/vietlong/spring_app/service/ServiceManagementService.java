@@ -307,6 +307,19 @@ public class ServiceManagementService {
         return convertToServiceResponse(service);
     }
 
+    public Page<ServiceResponse> getPublicServicesByCategory(String categoryId, Pageable pageable) throws AppException {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        if (!category.getIsActive()) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_ACTIVE);
+        }
+
+        Page<Service> services = serviceRepository.findByCategoryAndIsActiveTrueOrderByCreatedAtDesc(category,
+                pageable);
+        return services.map(this::convertToServiceResponse);
+    }
+
     private ServiceResponse convertToServiceResponse(Service service) {
         return ServiceResponse.builder()
                 .id(service.getId())

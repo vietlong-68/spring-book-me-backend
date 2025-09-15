@@ -92,4 +92,34 @@ public class ServiceController {
         return ResponseEntity
                 .ok(ApiResponse.success(categories, "Lấy danh sách danh mục công khai thành công", httpRequest));
     }
+
+    /**
+     * API lọc dịch vụ theo danh mục (chỉ active)
+     * Yêu cầu: Không cần authentication
+     * 
+     * @param categoryId  ID của danh mục
+     * @param page        Số trang (bắt đầu từ 0)
+     * @param size        Số lượng dịch vụ mỗi trang
+     * @param sortBy      Trường để sắp xếp (mặc định: createdAt)
+     * @param sortDir     Hướng sắp xếp: asc/desc (mặc định: desc)
+     * @param httpRequest HttpServletRequest
+     * @return Page chứa danh sách dịch vụ theo danh mục đã phân trang
+     * @throws AppException nếu không tìm thấy danh mục
+     */
+    @GetMapping("/categories/{categoryId}/services")
+    public ResponseEntity<ApiResponse<Page<ServiceResponse>>> getServicesByCategory(
+            @PathVariable String categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            HttpServletRequest httpRequest) throws AppException {
+
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<ServiceResponse> services = serviceManagementService.getPublicServicesByCategory(categoryId, pageable);
+        return ResponseEntity
+                .ok(ApiResponse.success(services, "Lấy danh sách dịch vụ theo danh mục thành công", httpRequest));
+    }
 }

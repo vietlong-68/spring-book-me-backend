@@ -50,4 +50,6 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
         Page<Service> findByIsActiveTrueOrderByCreatedAtDesc(Pageable pageable);
 
         Optional<Service> findByIdAndIsActiveTrue(String id);
+
+        Page<Service> findByCategoryAndIsActiveTrueOrderByCreatedAtDesc(Category category, Pageable pageable);
 }
