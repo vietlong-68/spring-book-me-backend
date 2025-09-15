@@ -108,4 +108,13 @@ public class AdminCategoryService {
         Category updatedCategory = categoryRepository.save(category);
         return CategoryResponse.fromEntity(updatedCategory);
     }
+
+    public List<CategoryResponse> getPublicCategories() {
+        List<Category> categories = categoryRepository.findByIsActiveTrueOrderByNameAsc();
+        List<CategoryResponse> responseList = new ArrayList<>();
+        for (Category category : categories) {
+            responseList.add(CategoryResponse.fromEntity(category));
+        }
+        return responseList;
+    }
 }

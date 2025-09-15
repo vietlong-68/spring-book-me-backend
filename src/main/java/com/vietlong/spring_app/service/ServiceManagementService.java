@@ -296,6 +296,17 @@ public class ServiceManagementService {
         return convertToServiceResponse(service);
     }
 
+    public Page<ServiceResponse> getPublicServicesPaginated(Pageable pageable) {
+        Page<Service> services = serviceRepository.findByIsActiveTrueOrderByCreatedAtDesc(pageable);
+        return services.map(this::convertToServiceResponse);
+    }
+
+    public ServiceResponse getPublicServiceById(String serviceId) throws AppException {
+        Service service = serviceRepository.findByIdAndIsActiveTrue(serviceId)
+                .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
+        return convertToServiceResponse(service);
+    }
+
     private ServiceResponse convertToServiceResponse(Service service) {
         return ServiceResponse.builder()
                 .id(service.getId())
