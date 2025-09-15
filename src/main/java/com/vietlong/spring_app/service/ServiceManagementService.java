@@ -276,6 +276,26 @@ public class ServiceManagementService {
         return provider;
     }
 
+    public List<ServiceResponse> getAllServices() {
+        List<Service> services = serviceRepository.findAll();
+        List<ServiceResponse> responseList = new ArrayList<>();
+        for (Service service : services) {
+            responseList.add(convertToServiceResponse(service));
+        }
+        return responseList;
+    }
+
+    public Page<ServiceResponse> getAllServicesPaginated(Pageable pageable) {
+        Page<Service> services = serviceRepository.findAll(pageable);
+        return services.map(this::convertToServiceResponse);
+    }
+
+    public ServiceResponse getServiceByIdForAdmin(String serviceId) throws AppException {
+        Service service = serviceRepository.findById(serviceId)
+                .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
+        return convertToServiceResponse(service);
+    }
+
     private ServiceResponse convertToServiceResponse(Service service) {
         return ServiceResponse.builder()
                 .id(service.getId())

@@ -177,6 +177,25 @@ public class GlobalExceptionHandler {
             case NETWORK_ERROR:
                 return HttpStatus.SERVICE_UNAVAILABLE;
 
+            case UNAUTHORIZED:
+                return HttpStatus.UNAUTHORIZED;
+            case PROVIDER_NOT_FOUND:
+                return HttpStatus.NOT_FOUND;
+            case PROVIDER_NOT_ACTIVE:
+                return HttpStatus.FORBIDDEN;
+            case PROVIDER_NOT_VERIFIED:
+                return HttpStatus.FORBIDDEN;
+            case SERVICE_NOT_FOUND:
+                return HttpStatus.NOT_FOUND;
+            case SERVICE_IN_USE:
+                return HttpStatus.CONFLICT;
+            case CATEGORY_NOT_FOUND:
+                return HttpStatus.NOT_FOUND;
+            case CATEGORY_NOT_ACTIVE:
+                return HttpStatus.FORBIDDEN;
+            case INVALID_SORT_FIELD:
+                return HttpStatus.BAD_REQUEST;
+
             default:
                 return HttpStatus.INTERNAL_SERVER_ERROR;
         }
