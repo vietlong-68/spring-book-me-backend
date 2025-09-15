@@ -41,6 +41,7 @@ public enum ErrorCode {
     SERVICE_IN_USE("SERVICE_002", "Dịch vụ đang được sử dụng, không thể xóa"),
     CATEGORY_NOT_FOUND("CATEGORY_001", "Không tìm thấy danh mục"),
     CATEGORY_NOT_ACTIVE("CATEGORY_002", "Danh mục không hoạt động"),
+    CATEGORY_IN_USE("CATEGORY_003", "Danh mục đang được sử dụng, không thể xóa"),
     INVALID_SORT_FIELD("SORT_001", "Trường sắp xếp không hợp lệ");
 
     private final String code;

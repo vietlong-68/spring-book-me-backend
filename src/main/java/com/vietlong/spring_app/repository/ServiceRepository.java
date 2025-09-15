@@ -1,5 +1,6 @@
 package com.vietlong.spring_app.repository;
 
+import com.vietlong.spring_app.model.Category;
 import com.vietlong.spring_app.model.Provider;
 import com.vietlong.spring_app.model.Service;
 import org.springframework.data.domain.Page;
@@ -39,4 +40,10 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
         @Query("SELECT s FROM Service s WHERE s.provider = :provider AND s.isActive = :isActive AND s.serviceName LIKE %:serviceName% ORDER BY s.createdAt DESC")
         List<Service> findByProviderAndIsActiveAndServiceNameContaining(@Param("provider") Provider provider,
                         @Param("isActive") Boolean isActive, @Param("serviceName") String serviceName);
+
+        List<Service> findByCategory(Category category);
+
+        long countByCategory(Category category);
+
+        boolean existsByCategory(Category category);
 }

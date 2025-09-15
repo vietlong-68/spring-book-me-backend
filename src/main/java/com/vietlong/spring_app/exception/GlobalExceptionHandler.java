@@ -193,6 +193,8 @@ public class GlobalExceptionHandler {
                 return HttpStatus.NOT_FOUND;
             case CATEGORY_NOT_ACTIVE:
                 return HttpStatus.FORBIDDEN;
+            case CATEGORY_IN_USE:
+                return HttpStatus.CONFLICT;
             case INVALID_SORT_FIELD:
                 return HttpStatus.BAD_REQUEST;
 
