@@ -229,7 +229,14 @@ public class ServiceManagementService {
         if (authentication == null) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
-        return authentication.getName();
+
+        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt) {
+            org.springframework.security.oauth2.jwt.Jwt jwt = (org.springframework.security.oauth2.jwt.Jwt) authentication
+                    .getPrincipal();
+            return jwt.getClaimAsString("userId");
+        }
+
+        throw new AppException(ErrorCode.INVALID_TOKEN);
     }
 
     private boolean isProviderActiveAndVerified(Provider provider) {
