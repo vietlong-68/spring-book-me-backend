@@ -32,7 +32,16 @@ public enum ErrorCode {
     FORCE_LOGOUT_FAILED("TOKEN_006", "Không thể force logout user"),
     CONFIGURATION_ERROR("CONFIG_001", "Lỗi cấu hình hệ thống"),
     DATABASE_ERROR("DB_001", "Lỗi kết nối cơ sở dữ liệu"),
-    NETWORK_ERROR("NET_001", "Lỗi kết nối mạng");
+    NETWORK_ERROR("NET_001", "Lỗi kết nối mạng"),
+    UNAUTHORIZED("AUTH_001", "Không có quyền truy cập"),
+    PROVIDER_NOT_FOUND("PROVIDER_001", "Không tìm thấy nhà cung cấp dịch vụ"),
+    PROVIDER_NOT_ACTIVE("PROVIDER_002", "Nhà cung cấp dịch vụ không hoạt động"),
+    PROVIDER_NOT_VERIFIED("PROVIDER_003", "Nhà cung cấp dịch vụ chưa được xác thực"),
+    SERVICE_NOT_FOUND("SERVICE_001", "Không tìm thấy dịch vụ"),
+    SERVICE_IN_USE("SERVICE_002", "Dịch vụ đang được sử dụng, không thể xóa"),
+    CATEGORY_NOT_FOUND("CATEGORY_001", "Không tìm thấy danh mục"),
+    CATEGORY_NOT_ACTIVE("CATEGORY_002", "Danh mục không hoạt động"),
+    INVALID_SORT_FIELD("SORT_001", "Trường sắp xếp không hợp lệ");
 
     private final String code;
     private final String message;

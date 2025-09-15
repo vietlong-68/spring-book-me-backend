@@ -38,4 +38,6 @@ public interface ProviderApplicationRepository extends JpaRepository<ProviderApp
     @Query("SELECT pa FROM ProviderApplication pa WHERE pa.user = :user AND pa.status = :status ORDER BY pa.createdAt DESC")
     Optional<ProviderApplication> findLatestApplicationByUserAndStatus(@Param("user") User user,
             @Param("status") ProviderApplicationStatus status);
+
+    boolean existsByBusinessName(String businessName);
 }

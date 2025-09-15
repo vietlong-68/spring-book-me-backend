@@ -54,6 +54,14 @@ public class ProviderApplicationService {
             throw new AppException(ErrorCode.INVALID_REQUEST, "Bạn đã có đơn đăng ký đang chờ duyệt");
         }
 
+        if (providerRepository.existsByBusinessName(request.getBusinessName())) {
+            throw new AppException(ErrorCode.INVALID_REQUEST, "Tên doanh nghiệp đã tồn tại trong hệ thống");
+        }
+
+        if (providerApplicationRepository.existsByBusinessName(request.getBusinessName())) {
+            throw new AppException(ErrorCode.INVALID_REQUEST, "Tên doanh nghiệp đã có trong đơn đăng ký khác");
+        }
+
         String businessLicenseFileUrl;
         try {
             businessLicenseFileUrl = fileUploadService.uploadFile(businessLicenseFile);
@@ -118,6 +126,16 @@ public class ProviderApplicationService {
         if (!application.canBeEdited()) {
             throw new AppException(ErrorCode.INVALID_REQUEST,
                     "Không thể sửa đơn đăng ký với trạng thái: " + application.getStatus().getDisplayName());
+        }
+
+        if (!request.getBusinessName().equals(application.getBusinessName())) {
+            if (providerRepository.existsByBusinessName(request.getBusinessName())) {
+                throw new AppException(ErrorCode.INVALID_REQUEST, "Tên doanh nghiệp đã tồn tại trong hệ thống");
+            }
+
+            if (providerApplicationRepository.existsByBusinessName(request.getBusinessName())) {
+                throw new AppException(ErrorCode.INVALID_REQUEST, "Tên doanh nghiệp đã có trong đơn đăng ký khác");
+            }
         }
 
         application.setBusinessName(request.getBusinessName());

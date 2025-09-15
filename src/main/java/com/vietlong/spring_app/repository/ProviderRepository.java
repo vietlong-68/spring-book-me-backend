@@ -38,4 +38,6 @@ public interface ProviderRepository extends JpaRepository<Provider, String> {
 
     @Query("SELECT p FROM Provider p WHERE p.address LIKE %:address% ORDER BY p.createdAt DESC")
     List<Provider> findByAddressContaining(@Param("address") String address);
+
+    boolean existsByBusinessName(String businessName);
 }

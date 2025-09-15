@@ -73,6 +73,12 @@ public class ProviderService {
             throw new AppException(ErrorCode.ACCESS_DENIED, "Bạn không có quyền sửa Provider này");
         }
 
+        if (!request.getBusinessName().equals(provider.getBusinessName())) {
+            if (providerRepository.existsByBusinessName(request.getBusinessName())) {
+                throw new AppException(ErrorCode.INVALID_REQUEST, "Tên doanh nghiệp đã tồn tại trong hệ thống");
+            }
+        }
+
         provider.setBusinessName(request.getBusinessName());
         provider.setBio(request.getBio());
         provider.setAddress(request.getAddress());
