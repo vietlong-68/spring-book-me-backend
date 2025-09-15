@@ -42,7 +42,14 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND("CATEGORY_001", "Không tìm thấy danh mục"),
     CATEGORY_NOT_ACTIVE("CATEGORY_002", "Danh mục không hoạt động"),
     CATEGORY_IN_USE("CATEGORY_003", "Danh mục đang được sử dụng, không thể xóa"),
-    INVALID_SORT_FIELD("SORT_001", "Trường sắp xếp không hợp lệ");
+    INVALID_SORT_FIELD("SORT_001", "Trường sắp xếp không hợp lệ"),
+    SCHEDULE_NOT_FOUND("SCHEDULE_001", "Không tìm thấy lịch hẹn"),
+    SCHEDULE_NOT_AVAILABLE("SCHEDULE_002", "Lịch hẹn không còn khả dụng"),
+    SCHEDULE_CONFLICT("SCHEDULE_003", "Lịch hẹn bị trùng thời gian"),
+    APPOINTMENT_NOT_FOUND("APPOINTMENT_001", "Không tìm thấy cuộc hẹn"),
+    APPOINTMENT_ALREADY_EXISTS("APPOINTMENT_002", "Bạn đã đặt lịch này rồi"),
+    APPOINTMENT_INVALID_STATUS("APPOINTMENT_003", "Trạng thái cuộc hẹn không hợp lệ"),
+    FORBIDDEN("FORBIDDEN_001", "Không có quyền thực hiện hành động này");
 
     private final String code;
     private final String message;
