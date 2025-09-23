@@ -29,23 +29,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ServiceManagementService {
 
-    private ServiceRepository serviceRepository;
-    private CategoryRepository categoryRepository;
-    private ProviderRepository providerRepository;
-    private UserRepository userRepository;
-    private FileUploadService fileUploadService;
-
-    public ServiceManagementService(ServiceRepository serviceRepository,
-            CategoryRepository categoryRepository,
-            ProviderRepository providerRepository,
-            UserRepository userRepository,
-            FileUploadService fileUploadService) {
-        this.serviceRepository = serviceRepository;
-        this.categoryRepository = categoryRepository;
-        this.providerRepository = providerRepository;
-        this.userRepository = userRepository;
-        this.fileUploadService = fileUploadService;
-    }
+    private final ServiceRepository serviceRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProviderRepository providerRepository;
+    private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
 
     public ServiceResponse createService(String providerId, CreateServiceRequest request, MultipartFile imageFile,
             Authentication authentication)
@@ -241,7 +229,14 @@ public class ServiceManagementService {
         if (authentication == null) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
-        return authentication.getName();
+
+        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt) {
+            org.springframework.security.oauth2.jwt.Jwt jwt = (org.springframework.security.oauth2.jwt.Jwt) authentication
+                    .getPrincipal();
+            return jwt.getClaimAsString("userId");
+        }
+
+        throw new AppException(ErrorCode.INVALID_TOKEN);
     }
 
     private boolean isProviderActiveAndVerified(Provider provider) {
@@ -294,6 +289,30 @@ public class ServiceManagementService {
         Service service = serviceRepository.findById(serviceId)
                 .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
         return convertToServiceResponse(service);
+    }
+
+    public Page<ServiceResponse> getPublicServicesPaginated(Pageable pageable) {
+        Page<Service> services = serviceRepository.findByIsActiveTrueOrderByCreatedAtDesc(pageable);
+        return services.map(this::convertToServiceResponse);
+    }
+
+    public ServiceResponse getPublicServiceById(String serviceId) throws AppException {
+        Service service = serviceRepository.findByIdAndIsActiveTrue(serviceId)
+                .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
+        return convertToServiceResponse(service);
+    }
+
+    public Page<ServiceResponse> getPublicServicesByCategory(String categoryId, Pageable pageable) throws AppException {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        if (!category.getIsActive()) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_ACTIVE);
+        }
+
+        Page<Service> services = serviceRepository.findByCategoryAndIsActiveTrueOrderByCreatedAtDesc(category,
+                pageable);
+        return services.map(this::convertToServiceResponse);
     }
 
     private ServiceResponse convertToServiceResponse(Service service) {

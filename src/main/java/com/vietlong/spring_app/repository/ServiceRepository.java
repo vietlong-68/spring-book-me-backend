@@ -46,4 +46,10 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
         long countByCategory(Category category);
 
         boolean existsByCategory(Category category);
+
+        Page<Service> findByIsActiveTrueOrderByCreatedAtDesc(Pageable pageable);
+
+        Optional<Service> findByIdAndIsActiveTrue(String id);
+
+        Page<Service> findByCategoryAndIsActiveTrueOrderByCreatedAtDesc(Category category, Pageable pageable);
 }
