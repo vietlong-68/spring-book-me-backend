@@ -45,7 +45,7 @@ public class ProviderApplicationController {
          * @throws AppException Nếu có lỗi xảy ra
          */
         @PostMapping
-        @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+        @PreAuthorize("hasRole('USER') or hasRole('PROVIDER')")
         public ResponseEntity<ApiResponse<ProviderApplicationResponse>> createApplication(
                         Authentication authentication,
                         @Valid @ModelAttribute CreateProviderApplicationRequest request,
@@ -81,7 +81,7 @@ public class ProviderApplicationController {
          * @throws AppException Nếu có lỗi xảy ra
          */
         @GetMapping("/my-applications")
-        @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+        @PreAuthorize("hasRole('USER') or hasRole('PROVIDER')")
         public ResponseEntity<ApiResponse<List<ProviderApplicationResponse>>> getMyApplications(
                         Authentication authentication,
                         HttpServletRequest httpRequest) throws AppException {
@@ -102,7 +102,7 @@ public class ProviderApplicationController {
          * @throws AppException Nếu có lỗi xảy ra
          */
         @GetMapping("/{applicationId}")
-        @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+        @PreAuthorize("hasRole('USER') or hasRole('PROVIDER')")
         public ResponseEntity<ApiResponse<ProviderApplicationResponse>> getApplicationById(
                         @PathVariable(name = "applicationId") String applicationId,
                         Authentication authentication,
@@ -126,7 +126,7 @@ public class ProviderApplicationController {
          * @throws AppException Nếu có lỗi xảy ra
          */
         @PutMapping("/{applicationId}")
-        @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+        @PreAuthorize("hasRole('USER') or hasRole('PROVIDER')")
         public ResponseEntity<ApiResponse<ProviderApplicationResponse>> updateApplication(
                         @PathVariable(name = "applicationId") String applicationId,
                         Authentication authentication,
@@ -149,7 +149,7 @@ public class ProviderApplicationController {
          * @throws AppException Nếu có lỗi xảy ra
          */
         @DeleteMapping("/{applicationId}")
-        @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
+        @PreAuthorize("hasRole('USER') or hasRole('PROVIDER')")
         public ResponseEntity<ApiResponse<Void>> cancelApplication(
                         @PathVariable(name = "applicationId") String applicationId,
                         Authentication authentication,
