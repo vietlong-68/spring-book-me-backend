@@ -6,6 +6,7 @@ import com.vietlong.spring_app.dto.response.AppointmentResponse;
 import com.vietlong.spring_app.exception.AppException;
 import com.vietlong.spring_app.model.AppointmentStatus;
 import com.vietlong.spring_app.service.AppointmentService;
+import com.vietlong.spring_app.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import java.util.Map;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+    private final AuthService authService;
 
     /**
      * API đặt lịch hẹn mới
@@ -42,13 +44,12 @@ public class AppointmentController {
      * @throws AppException nếu schedule không khả dụng hoặc user đã đặt lịch này
      */
     @PostMapping("/appointments")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<AppointmentResponse>> createAppointment(
             @Valid @RequestBody CreateAppointmentRequest createRequest,
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
-        String userId = authentication.getName();
+        String userId = authService.getUserIdFromAuthentication(authentication);
         AppointmentResponse appointment = appointmentService.createAppointment(userId, createRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -57,19 +58,18 @@ public class AppointmentController {
 
     /**
      * API lấy danh sách tất cả lịch hẹn của user
-     * Yêu cầu: Chỉ USER mới có quyền truy cập
+     * Cho phép tất cả các role truy cập
      * 
      * @param authentication Thông tin xác thực của user
      * @param request        HttpServletRequest
      * @return Danh sách tất cả lịch hẹn của user
      */
     @GetMapping("/user/appointments")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<List<AppointmentResponse>>> getUserAppointments(
             Authentication authentication,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String userId = authentication.getName();
+        String userId = authService.getUserIdFromAuthentication(authentication);
         List<AppointmentResponse> appointments = appointmentService.getUserAppointments(userId);
 
         return ResponseEntity.ok(ApiResponse.success(appointments, "Lấy danh sách lịch hẹn thành công", request));
@@ -77,7 +77,7 @@ public class AppointmentController {
 
     /**
      * API lấy danh sách lịch hẹn của user có phân trang và sắp xếp
-     * Yêu cầu: Chỉ USER mới có quyền truy cập
+     * Cho phép tất cả các role truy cập
      * 
      * @param authentication Thông tin xác thực của user
      * @param pageable       Thông tin phân trang (page, size, sort)
@@ -85,13 +85,12 @@ public class AppointmentController {
      * @return Page chứa danh sách lịch hẹn đã phân trang
      */
     @GetMapping("/user/appointments/paginated")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<Page<AppointmentResponse>>> getUserAppointmentsPaginated(
             Authentication authentication,
             Pageable pageable,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String userId = authentication.getName();
+        String userId = authService.getUserIdFromAuthentication(authentication);
         Page<AppointmentResponse> appointments = appointmentService.getUserAppointmentsPaginated(userId, pageable);
 
         return ResponseEntity
@@ -100,7 +99,7 @@ public class AppointmentController {
 
     /**
      * API lấy danh sách lịch hẹn của user theo trạng thái
-     * Yêu cầu: Chỉ USER mới có quyền truy cập
+     * Cho phép tất cả các role truy cập
      * 
      * @param status         Trạng thái lịch hẹn (SCHEDULED, CONFIRMED, COMPLETED,
      *                       CANCELLED)
@@ -109,13 +108,12 @@ public class AppointmentController {
      * @return Danh sách lịch hẹn theo trạng thái
      */
     @GetMapping("/user/appointments/status/{status}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<List<AppointmentResponse>>> getUserAppointmentsByStatus(
             @PathVariable AppointmentStatus status,
             Authentication authentication,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String userId = authentication.getName();
+        String userId = authService.getUserIdFromAuthentication(authentication);
         List<AppointmentResponse> appointments = appointmentService.getUserAppointmentsByStatus(userId, status);
 
         return ResponseEntity
@@ -156,7 +154,7 @@ public class AppointmentController {
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         AppointmentResponse appointment = appointmentService.confirmAppointment(providerId, appointmentId);
 
         return ResponseEntity.ok(ApiResponse.success(appointment, "Xác nhận lịch hẹn thành công", request));
@@ -180,7 +178,7 @@ public class AppointmentController {
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         AppointmentResponse appointment = appointmentService.completeAppointment(providerId, appointmentId);
 
         return ResponseEntity.ok(ApiResponse.success(appointment, "Hoàn thành dịch vụ thành công", request));
@@ -203,7 +201,7 @@ public class AppointmentController {
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
-        String userId = authentication.getName();
+        String userId = authService.getUserIdFromAuthentication(authentication);
         String reason = cancelRequest != null ? cancelRequest.get("reason") : "Không có lý do";
 
         AppointmentResponse appointment = appointmentService.cancelAppointment(userId, appointmentId, reason);
@@ -223,9 +221,9 @@ public class AppointmentController {
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<List<AppointmentResponse>>> getProviderAppointments(
             Authentication authentication,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         List<AppointmentResponse> appointments = appointmentService.getProviderAppointments(providerId);
 
         return ResponseEntity.ok(ApiResponse.success(appointments, "Lấy danh sách lịch hẹn thành công", request));
@@ -245,9 +243,9 @@ public class AppointmentController {
     public ResponseEntity<ApiResponse<Page<AppointmentResponse>>> getProviderAppointmentsPaginated(
             Authentication authentication,
             Pageable pageable,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         Page<AppointmentResponse> appointments = appointmentService.getProviderAppointmentsPaginated(providerId,
                 pageable);
 
@@ -270,9 +268,9 @@ public class AppointmentController {
     public ResponseEntity<ApiResponse<List<AppointmentResponse>>> getProviderAppointmentsByStatus(
             @PathVariable AppointmentStatus status,
             Authentication authentication,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         List<AppointmentResponse> appointments = appointmentService.getProviderAppointmentsByStatus(providerId, status);
 
         return ResponseEntity
