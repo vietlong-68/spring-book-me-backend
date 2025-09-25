@@ -40,7 +40,8 @@ public class AppointmentService {
             throw new AppException(ErrorCode.VALIDATION_ERROR, "Schedule này không thể đặt lịch");
         }
 
-        if (appointmentRepository.findByUserIdAndProviderScheduleId(userId, request.getScheduleId()).isPresent()) {
+        if (appointmentRepository.findActiveAppointmentByUserIdAndScheduleId(userId, request.getScheduleId())
+                .isPresent()) {
             throw new AppException(ErrorCode.VALIDATION_ERROR, "Bạn đã đặt lịch này rồi");
         }
 

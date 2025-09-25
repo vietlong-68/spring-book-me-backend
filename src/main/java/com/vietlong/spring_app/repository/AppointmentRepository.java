@@ -51,4 +51,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
         long countByProviderId(@Param("providerId") String providerId);
 
         Optional<Appointment> findByUserIdAndProviderScheduleId(String userId, String scheduleId);
+
+        @Query("SELECT a FROM Appointment a WHERE a.user.id = :userId AND a.providerSchedule.id = :scheduleId " +
+                        "AND a.status != 'CANCELLED'")
+        Optional<Appointment> findActiveAppointmentByUserIdAndScheduleId(@Param("userId") String userId,
+                        @Param("scheduleId") String scheduleId);
 }
