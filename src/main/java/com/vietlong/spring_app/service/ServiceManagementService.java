@@ -315,6 +315,11 @@ public class ServiceManagementService {
         return services.map(this::convertToServiceResponse);
     }
 
+    public Page<ServiceResponse> searchPublicServicesByName(String searchTerm, Pageable pageable) {
+        Page<Service> services = serviceRepository.findPublicServicesByNameContaining(searchTerm, pageable);
+        return services.map(this::convertToServiceResponse);
+    }
+
     private ServiceResponse convertToServiceResponse(Service service) {
         return ServiceResponse.builder()
                 .id(service.getId())

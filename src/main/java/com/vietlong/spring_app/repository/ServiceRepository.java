@@ -55,4 +55,7 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
 
         @Query("SELECT s FROM Service s JOIN FETCH s.provider p JOIN FETCH p.user WHERE s.id = :serviceId")
         Optional<Service> findByIdWithProviderAndUser(@Param("serviceId") String serviceId);
+
+        @Query("SELECT s FROM Service s WHERE s.isActive = true AND LOWER(s.serviceName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) ORDER BY s.createdAt DESC")
+        Page<Service> findPublicServicesByNameContaining(@Param("searchTerm") String searchTerm, Pageable pageable);
 }
