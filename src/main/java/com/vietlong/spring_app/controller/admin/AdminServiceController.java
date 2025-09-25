@@ -82,7 +82,7 @@ public class AdminServiceController {
      */
     @GetMapping("/{serviceId}")
     public ResponseEntity<ApiResponse<ServiceResponse>> getServiceById(
-            @PathVariable String serviceId,
+            @PathVariable("serviceId") String serviceId,
             HttpServletRequest httpRequest) throws AppException {
         ServiceResponse service = serviceManagementService.getServiceByIdForAdmin(serviceId);
         return ResponseEntity.ok(ApiResponse.success(service, "Lấy chi tiết dịch vụ thành công", httpRequest));

@@ -73,7 +73,7 @@ public class ServiceController {
          */
         @GetMapping("/services/{serviceId}")
         public ResponseEntity<ApiResponse<ServiceResponse>> getPublicServiceById(
-                        @PathVariable String serviceId,
+                        @PathVariable("serviceId") String serviceId,
                         HttpServletRequest httpRequest) throws AppException {
 
                 ServiceResponse service = serviceManagementService.getPublicServiceById(serviceId);
@@ -112,7 +112,7 @@ public class ServiceController {
          */
         @GetMapping("/categories/{categoryId}/services")
         public ResponseEntity<ApiResponse<Page<ServiceResponse>>> getServicesByCategory(
-                        @PathVariable String categoryId,
+                        @PathVariable("categoryId") String categoryId,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
                         @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -144,7 +144,7 @@ public class ServiceController {
          */
         @GetMapping("/search/services")
         public ResponseEntity<ApiResponse<Page<ServiceResponse>>> searchServices(
-                        @RequestParam String searchTerm,
+                        @RequestParam("searchTerm") String searchTerm,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
                         @RequestParam(defaultValue = "createdAt") String sortBy,

@@ -78,7 +78,7 @@ public class ProviderScheduleController {
          */
         @GetMapping("/schedules/{scheduleId}")
         public ResponseEntity<ApiResponse<ProviderScheduleResponse>> getScheduleById(
-                        @PathVariable String scheduleId,
+                        @PathVariable("scheduleId") String scheduleId,
                         HttpServletRequest request) throws AppException {
 
                 ProviderScheduleResponse schedule = providerScheduleService.getScheduleById(scheduleId);
@@ -126,7 +126,7 @@ public class ProviderScheduleController {
         @PutMapping("/provider/schedules/{scheduleId}")
         @PreAuthorize("hasRole('PROVIDER')")
         public ResponseEntity<ApiResponse<ProviderScheduleResponse>> updateSchedule(
-                        @PathVariable String scheduleId,
+                        @PathVariable("scheduleId") String scheduleId,
                         @Valid @RequestBody UpdateScheduleRequest updateRequest,
                         Authentication authentication,
                         HttpServletRequest request) throws AppException {
@@ -152,7 +152,7 @@ public class ProviderScheduleController {
         @DeleteMapping("/provider/schedules/{scheduleId}")
         @PreAuthorize("hasRole('PROVIDER')")
         public ResponseEntity<ApiResponse<Void>> deleteSchedule(
-                        @PathVariable String scheduleId,
+                        @PathVariable("scheduleId") String scheduleId,
                         Authentication authentication,
                         HttpServletRequest request) throws AppException {
 

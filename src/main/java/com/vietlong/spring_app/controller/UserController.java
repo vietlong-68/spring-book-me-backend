@@ -93,7 +93,7 @@ public class UserController {
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<UserResponse>> getUserProfileById(
-            @PathVariable String userId,
+            @PathVariable("userId") String userId,
             HttpServletRequest request) throws AppException {
 
         UserResponse userProfile = userService.getUserProfileById(userId);

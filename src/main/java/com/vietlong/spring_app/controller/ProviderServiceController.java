@@ -55,7 +55,7 @@ public class ProviderServiceController {
     @PostMapping("/{providerId}")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<ServiceResponse>> createService(
-            @PathVariable String providerId,
+            @PathVariable("providerId") String providerId,
             @Valid @ModelAttribute CreateServiceRequest request,
             @RequestParam(name = "imageFile", required = false) MultipartFile imageFile,
             Authentication authentication,
@@ -81,7 +81,7 @@ public class ProviderServiceController {
     @GetMapping("/{providerId}/services")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<List<ServiceResponse>>> getProviderServices(
-            @PathVariable String providerId,
+            @PathVariable("providerId") String providerId,
             Authentication authentication,
             HttpServletRequest httpRequest) throws AppException {
 
@@ -107,7 +107,7 @@ public class ProviderServiceController {
     @GetMapping("/{providerId}/services/paginated")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<Page<ServiceResponse>>> getProviderServicesPaginated(
-            @PathVariable String providerId,
+            @PathVariable("providerId") String providerId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -154,8 +154,8 @@ public class ProviderServiceController {
     @GetMapping("/{providerId}/services/{serviceId}")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<ServiceResponse>> getServiceById(
-            @PathVariable String providerId,
-            @PathVariable String serviceId,
+            @PathVariable("providerId") String providerId,
+            @PathVariable("serviceId") String serviceId,
             Authentication authentication,
             HttpServletRequest httpRequest) throws AppException {
 
@@ -180,8 +180,8 @@ public class ProviderServiceController {
     @PutMapping("/{providerId}/services/{serviceId}")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<ServiceResponse>> updateService(
-            @PathVariable String providerId,
-            @PathVariable String serviceId,
+            @PathVariable("providerId") String providerId,
+            @PathVariable("serviceId") String serviceId,
             @Valid @ModelAttribute UpdateServiceRequest request,
             @RequestParam(name = "imageFile", required = false) MultipartFile imageFile,
             Authentication authentication,
@@ -208,8 +208,8 @@ public class ProviderServiceController {
     @DeleteMapping("/{providerId}/services/{serviceId}")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<Void>> deleteService(
-            @PathVariable String providerId,
-            @PathVariable String serviceId,
+            @PathVariable("providerId") String providerId,
+            @PathVariable("serviceId") String serviceId,
             Authentication authentication,
             HttpServletRequest httpRequest) throws AppException {
 
@@ -232,8 +232,8 @@ public class ProviderServiceController {
     @PutMapping("/{providerId}/services/{serviceId}/activate")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<ServiceResponse>> activateService(
-            @PathVariable String providerId,
-            @PathVariable String serviceId,
+            @PathVariable("providerId") String providerId,
+            @PathVariable("serviceId") String serviceId,
             Authentication authentication,
             HttpServletRequest httpRequest) throws AppException {
 
@@ -257,8 +257,8 @@ public class ProviderServiceController {
     @PutMapping("/{providerId}/services/{serviceId}/deactivate")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<ServiceResponse>> deactivateService(
-            @PathVariable String providerId,
-            @PathVariable String serviceId,
+            @PathVariable("providerId") String providerId,
+            @PathVariable("serviceId") String serviceId,
             Authentication authentication,
             HttpServletRequest httpRequest) throws AppException {
 
@@ -284,8 +284,8 @@ public class ProviderServiceController {
     @PutMapping("/{providerId}/services/{serviceId}/upload-image")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<ServiceResponse>> uploadServiceImage(
-            @PathVariable String providerId,
-            @PathVariable String serviceId,
+            @PathVariable("providerId") String providerId,
+            @PathVariable("serviceId") String serviceId,
             @RequestParam("imageFile") MultipartFile imageFile,
             Authentication authentication,
             HttpServletRequest httpRequest) throws AppException {

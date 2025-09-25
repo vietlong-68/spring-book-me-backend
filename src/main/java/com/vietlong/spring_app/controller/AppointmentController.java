@@ -130,7 +130,7 @@ public class AppointmentController {
      */
     @GetMapping("/appointments/{appointmentId}")
     public ResponseEntity<ApiResponse<AppointmentResponse>> getAppointmentById(
-            @PathVariable String appointmentId,
+            @PathVariable("appointmentId") String appointmentId,
             HttpServletRequest request) throws AppException {
 
         AppointmentResponse appointment = appointmentService.getAppointmentById(appointmentId);
@@ -150,7 +150,7 @@ public class AppointmentController {
     @PutMapping("/appointments/{appointmentId}/confirm")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<AppointmentResponse>> confirmAppointment(
-            @PathVariable String appointmentId,
+            @PathVariable("appointmentId") String appointmentId,
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
@@ -174,7 +174,7 @@ public class AppointmentController {
     @PutMapping("/appointments/{appointmentId}/complete")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<AppointmentResponse>> completeAppointment(
-            @PathVariable String appointmentId,
+            @PathVariable("appointmentId") String appointmentId,
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
@@ -196,7 +196,7 @@ public class AppointmentController {
      */
     @PutMapping("/appointments/{appointmentId}/cancel")
     public ResponseEntity<ApiResponse<AppointmentResponse>> cancelAppointment(
-            @PathVariable String appointmentId,
+            @PathVariable("appointmentId") String appointmentId,
             @RequestBody(required = false) Map<String, String> cancelRequest,
             Authentication authentication,
             HttpServletRequest request) throws AppException {
