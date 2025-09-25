@@ -52,4 +52,7 @@ public interface ServiceRepository extends JpaRepository<Service, String> {
         Optional<Service> findByIdAndIsActiveTrue(String id);
 
         Page<Service> findByCategoryAndIsActiveTrueOrderByCreatedAtDesc(Category category, Pageable pageable);
+
+        @Query("SELECT s FROM Service s JOIN FETCH s.provider p JOIN FETCH p.user WHERE s.id = :serviceId")
+        Optional<Service> findByIdWithProviderAndUser(@Param("serviceId") String serviceId);
 }

@@ -5,6 +5,7 @@ import com.vietlong.spring_app.dto.request.CreateScheduleRequest;
 import com.vietlong.spring_app.dto.request.UpdateScheduleRequest;
 import com.vietlong.spring_app.dto.response.ProviderScheduleResponse;
 import com.vietlong.spring_app.exception.AppException;
+import com.vietlong.spring_app.service.AuthService;
 import com.vietlong.spring_app.service.ProviderScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ProviderScheduleController {
 
     private final ProviderScheduleService providerScheduleService;
+    private final AuthService authService;
 
     /**
      * API tìm kiếm lịch trống có thể đặt
@@ -99,7 +101,7 @@ public class ProviderScheduleController {
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         ProviderScheduleResponse schedule = providerScheduleService.createSchedule(providerId, createRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -126,7 +128,7 @@ public class ProviderScheduleController {
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         ProviderScheduleResponse schedule = providerScheduleService.updateSchedule(providerId, scheduleId,
                 updateRequest);
 
@@ -151,7 +153,7 @@ public class ProviderScheduleController {
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         providerScheduleService.deleteSchedule(providerId, scheduleId);
 
         return ResponseEntity.ok(ApiResponse.success(null, "Xóa lịch thành công", request));
@@ -169,9 +171,9 @@ public class ProviderScheduleController {
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<List<ProviderScheduleResponse>>> getProviderSchedules(
             Authentication authentication,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         List<ProviderScheduleResponse> schedules = providerScheduleService.getProviderSchedules(providerId);
 
         return ResponseEntity.ok(ApiResponse.success(schedules, "Lấy danh sách lịch thành công", request));
@@ -191,9 +193,9 @@ public class ProviderScheduleController {
     public ResponseEntity<ApiResponse<Page<ProviderScheduleResponse>>> getProviderSchedulesPaginated(
             Authentication authentication,
             Pageable pageable,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws AppException {
 
-        String providerId = authentication.getName();
+        String providerId = authService.getUserIdFromAuthentication(authentication);
         Page<ProviderScheduleResponse> schedules = providerScheduleService.getProviderSchedulesPaginated(providerId,
                 pageable);
 

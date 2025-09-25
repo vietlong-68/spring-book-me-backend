@@ -31,7 +31,8 @@ public class ProviderScheduleService {
     public ProviderScheduleResponse createSchedule(String providerId, CreateScheduleRequest request)
             throws AppException {
 
-        com.vietlong.spring_app.model.Service service = serviceRepository.findById(request.getServiceId())
+        com.vietlong.spring_app.model.Service service = serviceRepository
+                .findByIdWithProviderAndUser(request.getServiceId())
                 .orElseThrow(() -> new AppException(ErrorCode.SERVICE_NOT_FOUND));
 
         if (!service.getProvider().getUser().getId().equals(providerId)) {
