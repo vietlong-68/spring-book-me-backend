@@ -142,7 +142,7 @@ public class ServiceController {
          * @param httpRequest HttpServletRequest
          * @return Page chứa danh sách dịch vụ tìm kiếm đã phân trang
          */
-        @GetMapping("/services/search")
+        @GetMapping("/search/services")
         public ResponseEntity<ApiResponse<Page<ServiceResponse>>> searchServices(
                         @RequestParam String searchTerm,
                         @RequestParam(defaultValue = "0") int page,
