@@ -23,6 +23,7 @@ public class ServiceResponse {
 
     private String providerId;
     private String providerBusinessName;
+    private String providerLogoUrl;
 
     private String categoryId;
     private String categoryName;

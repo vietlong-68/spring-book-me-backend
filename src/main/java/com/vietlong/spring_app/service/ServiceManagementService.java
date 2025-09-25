@@ -335,6 +335,7 @@ public class ServiceManagementService {
                 .updatedAt(service.getUpdatedAt())
                 .providerId(service.getProvider().getId())
                 .providerBusinessName(service.getProvider().getBusinessName())
+                .providerLogoUrl(service.getProvider().getLogoUrl())
                 .categoryId(service.getCategory().getId())
                 .categoryName(service.getCategory().getName())
                 .totalDurationMinutes(service.getTotalDurationMinutes())
