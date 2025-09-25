@@ -164,6 +164,7 @@ public class AppointmentService {
                 .userName(appointment.getUser().getDisplayName())
                 .scheduleId(appointment.getProviderSchedule().getId())
                 .providerName(appointment.getProviderSchedule().getProvider().getDisplayName())
+                .serviceId(appointment.getProviderSchedule().getService().getId())
                 .serviceName(appointment.getProviderSchedule().getService().getServiceName())
                 .startTime(appointment.getProviderSchedule().getStartTime())
                 .endTime(appointment.getProviderSchedule().getEndTime())

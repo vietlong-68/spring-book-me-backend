@@ -18,6 +18,7 @@ public class AppointmentResponse {
     private String userName;
     private String scheduleId;
     private String providerName;
+    private String serviceId;
     private String serviceName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
