@@ -132,9 +132,6 @@ public class Appointment {
         return true;
     }
 
-    /**
-     * Tạo appointment từ ProviderSchedule
-     */
     public static Appointment createFromSchedule(User user, ProviderSchedule schedule, String notes) {
         if (!schedule.canBeBooked()) {
             throw new IllegalStateException("Cannot create appointment from unavailable schedule");
@@ -147,7 +144,6 @@ public class Appointment {
                 .notesFromUser(notes)
                 .build();
 
-        // Book slot trong schedule
         schedule.book();
 
         return appointment;

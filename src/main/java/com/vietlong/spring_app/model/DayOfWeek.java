@@ -4,6 +4,8 @@ import com.vietlong.spring_app.exception.AppException;
 import com.vietlong.spring_app.exception.ErrorCode;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 public enum DayOfWeek {
     MONDAY(1, "Thứ Hai"),
@@ -60,5 +62,11 @@ public enum DayOfWeek {
 
     public boolean isWeekend() {
         return this.value == 6 || this.value == 7;
+    }
+
+    public static DayOfWeek fromLocalDate(LocalDate date) throws AppException {
+        int dayOfWeekValue = date.getDayOfWeek().getValue();
+
+        return fromValue(dayOfWeekValue);
     }
 }
