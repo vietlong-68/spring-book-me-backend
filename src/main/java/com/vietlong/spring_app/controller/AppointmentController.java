@@ -109,7 +109,7 @@ public class AppointmentController {
      */
     @GetMapping("/user/appointments/status/{status}")
     public ResponseEntity<ApiResponse<List<AppointmentResponse>>> getUserAppointmentsByStatus(
-            @PathVariable AppointmentStatus status,
+            @PathVariable("status") AppointmentStatus status,
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
@@ -266,7 +266,7 @@ public class AppointmentController {
     @GetMapping("/provider/appointments/status/{status}")
     @PreAuthorize("hasRole('PROVIDER')")
     public ResponseEntity<ApiResponse<List<AppointmentResponse>>> getProviderAppointmentsByStatus(
-            @PathVariable AppointmentStatus status,
+            @PathVariable("status") AppointmentStatus status,
             Authentication authentication,
             HttpServletRequest request) throws AppException {
 
